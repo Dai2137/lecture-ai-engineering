@@ -168,6 +168,12 @@ def display_history_list(history_df):
             cols[1].metric("類似度", f"{row['similarity_score']:.4f}" if pd.notna(row['similarity_score']) else "-")
             cols[2].metric("関連性", f"{row['relevance_score']:.4f}" if pd.notna(row['relevance_score']) else "-")
 
+            # 冗長度、多様性（新規）
+            cols = st.columns(2)
+            cols[0].metric("冗長度", f"{row['redundancy_score']:.4f}" if pd.notna(row['redundancy_score']) else "-")
+            cols[1].metric("多様性", f"{row['diversity_score']:.4f}" if pd.notna(row['diversity_score']) else "-")
+
+
     st.caption(f"{total_items} 件中 {start_idx+1} - {min(end_idx, total_items)} 件を表示")
 
 
@@ -194,7 +200,9 @@ def display_metrics_analysis(history_df):
 
     # 応答時間と他の指標の関係
     st.write("##### 応答時間とその他の指標の関係")
-    metric_options = ["bleu_score", "similarity_score", "relevance_score", "word_count"]
+    # metric_options = ["bleu_score", "similarity_score", "relevance_score", "word_count"]
+    metric_options = ["bleu_score", "similarity_score", "relevance_score", "word_count", "redundancy_score", "diversity_score"]
+
     # 利用可能な指標のみ選択肢に含める
     valid_metric_options = [m for m in metric_options if m in analysis_df.columns and analysis_df[m].notna().any()]
 
@@ -222,7 +230,9 @@ def display_metrics_analysis(history_df):
 
     # 全体の評価指標の統計
     st.write("##### 評価指標の統計")
-    stats_cols = ['response_time', 'bleu_score', 'similarity_score', 'word_count', 'relevance_score']
+    # stats_cols = ['response_time', 'bleu_score', 'similarity_score', 'word_count', 'relevance_score']
+    stats_cols = ['response_time', 'bleu_score', 'similarity_score', 'word_count', 'relevance_score', 'redundancy_score', 'diversity_score']
+
     valid_stats_cols = [c for c in stats_cols if c in analysis_df.columns and analysis_df[c].notna().any()]
     if valid_stats_cols:
         metrics_stats = analysis_df[valid_stats_cols].describe()
