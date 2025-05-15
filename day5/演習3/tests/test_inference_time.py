@@ -2,11 +2,12 @@ import time
 import os
 import pytest
 import pandas as pd
-from your_model_module import YourModel  # モデルのインポート先を適切に修正してください
+import pickle
 
 # テスト用データパスを定義
 DATA_PATH = os.path.join(os.path.dirname(__file__), "../data/Titanic.csv")
-
+# モデルのパスを定義
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "../models/titanic_model.pkl")
 
 @pytest.fixture
 def sample_data():
@@ -15,7 +16,7 @@ def sample_data():
 
 
 def test_inference_time():
-    model = YourModel()
+    model = pickle.load(open(MODEL_PATH, "rb"))
     
     # テストデータの準備
     test_data = sample_data()  # テストデータを準備
