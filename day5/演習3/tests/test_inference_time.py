@@ -20,7 +20,7 @@ def test_inference_time():
     model = pickle.load(open(MODEL_PATH, "rb"))
 
     # テストデータの準備
-    test_data = sample_data()  # テストデータを準備
+    test_data = sample_data  # テストデータを準備
 
     # 推論時間の測定
     start_time = time.time()
