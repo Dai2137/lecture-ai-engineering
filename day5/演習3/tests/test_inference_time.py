@@ -12,11 +12,26 @@ MODEL_PATH = os.path.join(os.path.dirname(__file__), "../models/titanic_model.pk
 
 @pytest.fixture
 def sample_data():
-    """Titanicテスト用データセットを読み込む"""
+    """テスト用データセットを読み込む"""
+    if not os.path.exists(DATA_PATH):
+        from sklearn.datasets import fetch_openml
+
+        titanic = fetch_openml("titanic", version=1, as_frame=True)
+        df = titanic.data
+        df["Survived"] = titanic.target
+
+        # 必要なカラムのみ選択
+        df = df[
+            ["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked", "Survived"]
+        ]
+
+        os.makedirs(os.path.dirname(DATA_PATH), exist_ok=True)
+        df.to_csv(DATA_PATH, index=False)
+
     return pd.read_csv(DATA_PATH)
 
 
-def test_inference_time():
+def test_inference_time(sample_data):
     model = pickle.load(open(MODEL_PATH, "rb"))
 
     # テストデータの準備
